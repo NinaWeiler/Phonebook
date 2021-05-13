@@ -1,7 +1,6 @@
 //commands
 //npm run dev <- nodemon
 
-const { request } = require('express')
 const express = require('express')
 const app = express()
 
@@ -31,11 +30,6 @@ let persons = [
     ]
   
 
-
-
-// Phonebook has info for x people
-//Time of processing request
-
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
   })
@@ -59,7 +53,7 @@ app.get('/api/persons/:id', (request, response) => {
     if (person) {
         response.json(person)
     } else {
-        response.status(404).end()
+        response.status(404).send('Contact not found')
     }
 })
 
