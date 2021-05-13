@@ -1,6 +1,7 @@
 //commands
 //npm run dev <- nodemon
 
+const { request } = require('express')
 const express = require('express')
 const app = express()
 
@@ -31,13 +32,36 @@ let persons = [
   
 
 
+
+// Phonebook has info for x people
+//Time of processing request
+
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
   })
   
-  app.get('/api/persons', (request, response) => {
-    response.json(persons)
-  })
+app.get('/api/persons', (request, response) => {
+response.json(persons)
+})
+
+app.get('/info', (request, response) => {
+    const amount = persons.length
+    console.log(persons.length)
+    const now = new Date()
+
+    response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date}</p>`)
+    console.log(now)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(p => p.id === id)
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end()
+    }
+})
 
 
 
