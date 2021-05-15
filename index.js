@@ -1,10 +1,17 @@
 //commands
 //npm run dev <- nodemon
 
-const express = require('express')
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors')
 const app = express()
 
 app.use(express.json())
+app.use(cors())
+
+
+morgan.token('content', (req,res) => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :res[content-length] :response-time ms :content'))
 
 
 let persons = [
@@ -42,11 +49,11 @@ response.json(persons)
 
 app.get('/info', (request, response) => {
     const amount = persons.length
-    console.log(persons.length)
+    //console.log(persons.length)
     const now = new Date()
 
     response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date}</p>`)
-    console.log(now)
+    //console.log(now)
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -72,7 +79,6 @@ app.delete('/api/persons/:id', (request, response) => {
 
 const generateId = () => {
     const id = Math.floor(Math.random() * 1000);
-    console.log(id)
     return id
     
 }
@@ -80,7 +86,7 @@ const generateId = () => {
 //add console logs
 app.post('/api/persons', (request, response) => {
     const body = request.body
-    console.log(body)
+    //console.log(body)
 
     
     if(!body.name || !body.number) {
@@ -104,6 +110,7 @@ app.post('/api/persons', (request, response) => {
    
 })
 
-const PORT = 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})

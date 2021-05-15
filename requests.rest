@@ -2,12 +2,12 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Arto Hellas",
+    "name": "Artni",
     "number": "0090"
 }
 
 ###
 
-//GET http://localhost:3001/api/persons
+GET http://localhost:3001/api/persons
 
 //DELETE http://localhost:3001/api/persons/1
