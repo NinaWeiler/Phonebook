@@ -11,3 +11,18 @@ Content-Type: application/json
 GET http://localhost:3001/api/persons
 
 //DELETE http://localhost:3001/api/persons/1
+
+POST https://boiling-sands-07334.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Artni",
+    "number": "0090"
+}
+
+###
+
+GET https://boiling-sands-07334.herokuapp.com/api/persons
+
+//DELETE http://localhost:3001/api/persons/1
+
