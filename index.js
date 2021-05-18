@@ -19,8 +19,9 @@ const errorHandler = (error, request, response, next) => {
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
-    } 
-  
+    } else if (error.name === 'ValidationError') { 
+        return response.status(400).json({error: error.message})
+  }
     next(error)
   }
   
@@ -98,19 +99,20 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
+// check for duplicates, server respond with approproate status code and error message
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
     //console.log(body)
 
-    
+    /*
     if(!body.name || !body.number) {
         console.log('error: name or number missing')
         return response.status(400).json({
             error: 'name or number missing'
         })
     } 
-    /*
+    
     if(persons.find(p => p.name.toLowerCase()  === body.name.toLowerCase())) {
         return response.status(400).json({error: 'name must be unique'})
     } */
@@ -120,9 +122,21 @@ app.post('/api/persons', (request, response) => {
         number: body.number,
     })
 
-    person.save().then(savedPerson => {
-        response.json(savedPerson)
-    })
+    person
+        .save()
+        .then(savedPerson => savedPerson.toJSON())
+        .then(savedAndFormattedPerson => {
+            response.json(savedAndFormattedPerson)
+        })
+        .catch(error => next(error))
+
+    
+
+    
+    /*
+    .catch(error => 
+        console.log('error: name already exists in phonebook'),
+        response.status(403).send({error: 'name already exists in phonebook'}))*/
    
 })
 
