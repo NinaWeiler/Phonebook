@@ -10,6 +10,17 @@ Content-Type: application/json
 
 GET http://localhost:3001/api/persons
 
+###
+
+PUT http://localhost:3001/api/persons/60a36f6e4ba7234764becd66
+Content-Type: application/json
+
+{
+    "name": "Arttu",
+    "number": "33333"
+}
+
+
 //DELETE http://localhost:3001/api/persons/1
 
 ###
