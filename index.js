@@ -1,15 +1,14 @@
 //commands
 //npm run dev <- nodemon
-require('dotenv').config()
 
 const express = require('express');
+const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
-const mongoose = require('mongoose');
+require('dotenv').config()
 const Person = require('./models/person')
 //const config = require('./.config');
 
-const app = express()
 
 app.use(express.static('build'))
 
@@ -78,7 +77,8 @@ app.get('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
         console.log(error)
-        response.status(500).end()
+        response.status(400).send({ error: 'malformatted id' })
+
     })    
    
     
