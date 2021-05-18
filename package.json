@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\"",
+    "build:ui": "rm -rf build && cd ../FullStackOpen/part2/phonebook && npm run build --prod",
+    "deploy": "git push heroku master",
+    "deploy:full": "git add . && git commit -m uibuild && git push && npm run deploy",
+    "logs:prod": "heroku logs --tail"
   },
   "repository": {
     "type": "git",
@@ -20,7 +24,9 @@
   "homepage": "https://github.com/NinaWeiler/Phonebook#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "mongoose": "^5.12.9",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
