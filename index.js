@@ -140,6 +140,7 @@ app.post('/api/persons', (request, response, next) => {
    
 })
 
+// runValidators: off on default, must be made true to work
 app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
     console.log('req.body', body)
@@ -148,7 +149,7 @@ app.put('/api/persons/:id', (request, response, next) => {
         number: body.number,
     }
 
-    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+    Person.findByIdAndUpdate(request.params.id, {number:person.number}, {runValidators: true, new: true})
     .then(updatedPerson => {
         response.json(updatedPerson)
     })
