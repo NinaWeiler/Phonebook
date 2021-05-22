@@ -20,7 +20,6 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 const personSchema = new mongoose.Schema({
   name: String,
   number: String,
-  
 })
 
 const Person = mongoose.model('Person', personSchema)
@@ -41,19 +40,14 @@ if (!name) {
         result.forEach(person => {
             console.log(person.name, person.number)
         })
-        mongoose.connection.close()    
+        mongoose.connection.close()
     })
-    
 } else {
     person.save().then(result => {
         console.log(`added ${name} number ${number} to phonebook`)
         mongoose.connection.close()
-      }) 
+      })
 }
-
-
-
-
 /*
 //listing stored data
 Person.find({}).then(result => {

@@ -1,11 +1,11 @@
-//commands
-//npm run dev <- nodemon
-
-const express = require('express');
-const app = express();
-const morgan = require('morgan');
-const cors = require('cors');
-require('dotenv').config()
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config()
+}
+const express = require('express')
+const app = express()
+const morgan = require('morgan')
+const cors = require('cors')
 const Person = require('./models/person')
 
 
@@ -15,16 +15,17 @@ app.use(cors())
 app.use(express.json())
 
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-  
-    if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    } else if (error.name === 'ValidationError') { 
-        return response.status(400).json({error: error.message})
-  }
-    next(error)
-  }
-  
+	console.error(error.message)
+
+	if (error.name === 'CastError') {
+		return response.status(400).send({ error: 'malformatted id' })
+	} else if (error.name === 'ValidationError') {
+		return response.status(400).json({ error: error.message })
+	}
+	next(error)
+}
+
+// eslint-disable-next-line no-unused-vars
 morgan.token('content', (req,res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] :response-time ms :content'))
 
@@ -51,121 +52,111 @@ let persons = [
         "number": "39-23-6423122",
         "id": 4
       },
-      
-    ]
-  
+]
 */
-
 app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
-  })
-
-app.get('/info', (request, response) => {
-    const now = new Date()
-    Person.find({}).then(persons => {
-    response.send(`<p>Phonebook has info for ${persons.length} people</p> \n ${now}`)
-    })
+	response.send('<h1>Hello World!</h1>')
 })
 
-  
+app.get('/info', (request, response) => {
+	const now = new Date()
+	Person.find({}).then(persons => {
+		response.send(`<p>Phonebook has info for ${persons.length} people</p> \n ${now}`)
+	})
+})
+
+
 //GET persons
 app.get('/api/persons', (request, response) => {
-    Person.find({}).then(people => {
-        response.json(people)
-    })
+	Person.find({}).then(people => {
+		response.json(people)
+	})
 })
 
 
 app.get('/api/persons/:id', (request, response, next) => {
-    Person.findById(request.params.id)
-    .then(person => {
-        if(person) {
-            response.json(person)
-        } else {
-            response.status(404).end()
-        }
-    })
-    .catch(error => next(error))
-   
+	Person.findById(request.params.id)
+		.then(person => {
+			if(person) {
+				response.json(person)
+			} else {
+				response.status(404).end()
+			}
+		})
+		.catch(error => next(error))
+
 })
 
 //DELETE person
 
 app.delete('/api/persons/:id', (request, response, next) => {
-    Person.findByIdAndRemove(request.params.id)
-    .then(result => {
-        response.status(204).end()
-    })
-    .catch(error => next(error))
+	Person.findByIdAndRemove(request.params.id)
+		// eslint-disable-next-line no-unused-vars
+		.then(result => {
+			response.status(204).end()
+		})
+		.catch(error => next(error))
 })
 
 // check for duplicates, server respond with approproate status code and error message
 
 app.post('/api/persons', (request, response, next) => {
-    const body = request.body
-    //console.log(body)
+	const body = request.body
+	//console.log(body)
 
-    /*
+	/*
     if(!body.name || !body.number) {
         console.log('error: name or number missing')
         return response.status(400).json({
             error: 'name or number missing'
-        })
-    } 
-    
+    })
+}
+
     if(persons.find(p => p.name.toLowerCase()  === body.name.toLowerCase())) {
         return response.status(400).json({error: 'name must be unique'})
     } */
-    
-    const person = new Person({
-        name: body.name,
-        number: body.number,
-    })
 
-    person
-        .save()
-        .then(savedPerson => savedPerson.toJSON())
-        .then(savedAndFormattedPerson => {
-            response.json(savedAndFormattedPerson)
-        })
-        .catch(error => next(error))
+	const person = new Person({
+		name: body.name,
+		number: body.number,
+	})
 
-    
-
-    
-    /*
-    .catch(error => 
-        console.log('error: name already exists in phonebook'),
-        response.status(403).send({error: 'name already exists in phonebook'}))*/
-   
+	person
+		.save()
+		.then(savedPerson => savedPerson.toJSON())
+		.then(savedAndFormattedPerson => {
+			response.json(savedAndFormattedPerson)
+		})
+		.catch(error => next(error))
 })
 
 // runValidators: off on default, must be made true to work
 app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
-    console.log('req.body', body)
-    const person = {
-        name: body.name,
-        number: body.number,
-    }
+	const body = request.body
+	console.log('req.body', body)
+	const person = {
+		name: body.name,
+		number: body.number,
+	}
 
-    Person.findByIdAndUpdate(request.params.id, {number:person.number}, {runValidators: true, new: true})
-    .then(updatedPerson => {
-        response.json(updatedPerson)
-    })
-    .catch(error => next(error))
+	Person.findByIdAndUpdate(request.params.id, { number:person.number }, { runValidators: true, new: true })
+		.then(updatedPerson => {
+			response.json(updatedPerson)
+		})
+		.catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-  }
-  
+	response.status(404).send({ error: 'unknown endpoint' })
+}
+
 app.use(unknownEndpoint)
 
 // this has to be the last loaded middleware.
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+	console.log(`Server running on port ${PORT}`)
 })
